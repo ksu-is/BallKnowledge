@@ -1,44 +1,61 @@
-#Test Run
-quiz = [
-    {"questions":"What teams played in the 2019 UEFA UCL final?",
-     "options":"A) PSG vs. FCB\nB) RMA vs. FCB\nC) LIV vs. TOT\nD) SEV vs. MAN",
-     "answer":"C"},
+import json
+import random
 
-    {"questions":"What city hosted the 2019 UEFA UCL final?",
-     "options":"A) Kennesaw\nB) Lisbon\nC) Amsterdam\nD) Madrid",
-     "answer":"D"},
+# Load questions
+with open("questions.json", "r") as f:
+    quiz = json.load(f)
 
-    {"questions":"What was the final score of the 2019 UEFA UCL final?",
-     "options":"A) LIV 2 - TOT 0\nB) LIV 5 - TOT 10\nC) LIV 1 - TOT 2\nD) LIV 2 - TOT 3",
-     "answer":"A"}
-]
+# Pick 10 random questions (since your system uses up to 10)
+quiz = random.sample(quiz, 10)
 
 score = 0
+streak = 0
+bonus_active = False
+bonus_stage = 0  # counts from question 4 onward
 
-for q in quiz:
-    print("Question:", q["questions"])
-    print("\nOptions:\n", q["options"])
+for i, q in enumerate(quiz, start=1):
+    print(f"\nQuestion {i}: {q['question']}")
+    user_answer = input("Your answer: ").lower().strip()
 
-    user_answer = input("\nEnter your Answer: ").upper()
+    correct = user_answer in q["answers"]
 
-    # Split options into lines
-    options_list = q["options"].split("\n")
+    # 🔹 First 3 questions (normal scoring)
+    if not bonus_active:
+        if correct:
+            print("Correct!")
+            score += 1
+            streak += 1
 
-    # Find the full correct answer text
-    correct_text = ""
-    for option in options_list:
-        if option.startswith(q["answer"]):
-            correct_text = option
-            break
+            # Activate bonus after 3 correct in a row
+            if streak == 3:
+                bonus_active = True
+                print("Bonus round unlocked!")
+        else:
+            print("Incorrect!")
+            print("Correct answer:", q["answers"][0])
+            streak = 0
 
-    if user_answer == q["answer"]:
-        print("Correct!")
-        score += 1
+    # 🔹 Bonus rounds
     else:
-        print("Incorrect!")
-        print("The correct answer is:", correct_text)
+        bonus_stage += 1
 
-print("\nYour final score is:", score)
-print("Thank you for playing the quiz!")
+        if correct:
+            # If questions 4–7 are correct, they're worth 2 points
+            if 1 <= bonus_stage <= 4:
+                print("Correct! (+2 points)")
+                score += 2
 
-#This change in code is so that the correct answers are displayed if the user picked the wrong one
+            # If questions 8–10 are correct, they're worth 3 points
+            elif 5 <= bonus_stage <= 7:
+                print("Correct! (+3 points)")
+                score += 3
+
+        else:
+            print("Incorrect!")
+            print("Correct answer:", q["answers"][0])
+
+            # Lose bonus if any mistake
+            print("Bonus round failed!")
+            bonus_active = False
+
+print("\nFinal score:", score)
