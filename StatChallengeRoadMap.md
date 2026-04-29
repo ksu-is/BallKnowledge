@@ -3,10 +3,10 @@
 - [x] Find a video/repository that might be of use.
 
 # Sprint 2
-- [ ] Begin to create code file
-- [ ] Add statistics
+- [x] Begin to create code file
+- [x] Add statistics/questions and answers in a json file
 - [ ] Implement a placeholder leaderboard
-- [ ] Test run with the normal game mode
+- [x] Test run with the normal game mode
 
 # Sprint 3
 - [ ] Add new game modes
