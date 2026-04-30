@@ -3,7 +3,6 @@
 Developed by Giovanni Zavala
 
 This is a quiz that makes you second-guess if you actually know ball. 
-
 This game quizzes you by asking multiple different questions and in no set order. 
 
 ## Scoring System
